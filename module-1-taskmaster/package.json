@@ -1,0 +1,22 @@
+{
+  "name": "taskmaster",
+  "version": "1.0.0",
+  "description": "A CLI task manager — Module 1 CRISP exercise starter",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "commander": "^13.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "tsx": "^4.19.0",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.0.0"
+  }
+}

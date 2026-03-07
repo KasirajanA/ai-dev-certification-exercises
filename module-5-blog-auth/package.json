@@ -1,0 +1,23 @@
+{
+  "name": "module-5-blog-auth",
+  "version": "1.0.0",
+  "description": "Blog API starter - add JWT authentication as a certification exercise",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0",
+    "supertest": "^7.0.0",
+    "vitest": "^2.1.0"
+  }
+}

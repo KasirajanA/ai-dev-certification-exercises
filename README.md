@@ -23,6 +23,8 @@ claude
 | `module-2-debugger/` | 2: Navigate, Debug & Understand | Debug Detective | Express API with 3 intentional bugs to find and fix |
 | `module-3-url-shortener/` | 3: Build with Confidence | URL Shortener TDD | Practice Red-Green-Refactor with Vitest |
 | `module-4-legacy-rescue/` | 4: Real-World Complexity | Legacy Code Rescue | Modernize messy callback-style Node.js code |
+| `module-5-blog-auth/` | 5: Plan Before You Build | Plan & Implement Auth | Blog API with no auth — plan and add JWT using Plan Mode |
+| `module-6-ai-toolkit/` | 6: Multiply Your Power | Build Your AI Toolkit | TypeScript API with intentional issues — build .claude/ commands, agents & MCP |
 
 ## How to Use
 

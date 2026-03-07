@@ -1,0 +1,17 @@
+{
+  "name": "module-3-url-shortener",
+  "version": "1.0.0",
+  "description": "URL Shortener TDD Exercise - Build with Red-Green-Refactor",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "nanoid": "^5.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.0"
+  }
+}

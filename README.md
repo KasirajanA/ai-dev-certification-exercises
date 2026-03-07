@@ -20,6 +20,7 @@ claude
 | `module-0-weather-api/` | 0: Zero to Running | Weather Dashboard API | Scaffold for building your first AI-generated project |
 | `module-1-taskmaster/` | 1: Your First AI-Powered Feature | Add Priority (CRISP) | Pre-built task manager — practice CRISP prompting |
 | `module-1-commitgen/` | 1: Your First AI-Powered Feature | Git Commit Message Generator | Scaffold for building a real developer tool |
+| `module-2-debugger/` | 2: Navigate, Debug & Understand | Debug Detective | Express API with 3 intentional bugs to find and fix |
 
 ## How to Use
 

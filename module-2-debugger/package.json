@@ -1,0 +1,21 @@
+{
+  "name": "module-2-debugger",
+  "version": "1.0.0",
+  "description": "Debug Detective Challenge - Find and fix 3 bugs using Claude Code",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "seed": "tsx src/seed.ts",
+    "test": "tsx src/test.ts"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.0.0",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/express": "^5.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

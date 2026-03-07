@@ -22,6 +22,7 @@ claude
 | `module-1-commitgen/` | 1: Your First AI-Powered Feature | Git Commit Message Generator | Scaffold for building a real developer tool |
 | `module-2-debugger/` | 2: Navigate, Debug & Understand | Debug Detective | Express API with 3 intentional bugs to find and fix |
 | `module-3-url-shortener/` | 3: Build with Confidence | URL Shortener TDD | Practice Red-Green-Refactor with Vitest |
+| `module-4-legacy-rescue/` | 4: Real-World Complexity | Legacy Code Rescue | Modernize messy callback-style Node.js code |
 
 ## How to Use
 

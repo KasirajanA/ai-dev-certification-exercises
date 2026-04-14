@@ -1,19 +1,22 @@
-// TODO: This app has no authentication! Any user can create, edit, or delete any post.
-
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
+const { requireAuth } = require("./middleware/auth");
+const authRoutes = require("./routes/auth");
 
 const prisma = new PrismaClient();
 const app = express();
 
 app.use(express.json());
 
+// Auth routes
+app.use("/api/auth", authRoutes);
+
 // Health check
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
-// List all published posts
+// List all published posts (public)
 app.get("/api/posts", async (req, res) => {
   try {
     const posts = await prisma.post.findMany({
@@ -26,7 +29,7 @@ app.get("/api/posts", async (req, res) => {
   }
 });
 
-// Get a single post with comments
+// Get a single post with comments (public)
 app.get("/api/posts/:id", async (req, res) => {
   try {
     const post = await prisma.post.findUnique({
@@ -44,8 +47,8 @@ app.get("/api/posts/:id", async (req, res) => {
   }
 });
 
-// Create a new post
-app.post("/api/posts", async (req, res) => {
+// Create a new post (requires auth)
+app.post("/api/posts", requireAuth, async (req, res) => {
   try {
     const { title, content, published } = req.body;
 
@@ -58,6 +61,7 @@ app.post("/api/posts", async (req, res) => {
         title,
         content,
         published: published ?? false,
+        authorId: req.user.sub,
       },
     });
 
@@ -67,8 +71,8 @@ app.post("/api/posts", async (req, res) => {
   }
 });
 
-// Update a post
-app.put("/api/posts/:id", async (req, res) => {
+// Update a post (requires auth + ownership)
+app.put("/api/posts/:id", requireAuth, async (req, res) => {
   try {
     const { title, content, published } = req.body;
 
@@ -78,6 +82,10 @@ app.put("/api/posts/:id", async (req, res) => {
 
     if (!existing) {
       return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (existing.authorId !== req.user.sub) {
+      return res.status(403).json({ error: "Forbidden" });
     }
 
     const post = await prisma.post.update({
@@ -95,8 +103,8 @@ app.put("/api/posts/:id", async (req, res) => {
   }
 });
 
-// Delete a post
-app.delete("/api/posts/:id", async (req, res) => {
+// Delete a post (requires auth + ownership)
+app.delete("/api/posts/:id", requireAuth, async (req, res) => {
   try {
     const existing = await prisma.post.findUnique({
       where: { id: parseInt(req.params.id) },
@@ -104,6 +112,10 @@ app.delete("/api/posts/:id", async (req, res) => {
 
     if (!existing) {
       return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (existing.authorId !== req.user.sub) {
+      return res.status(403).json({ error: "Forbidden" });
     }
 
     await prisma.post.delete({
@@ -116,7 +128,7 @@ app.delete("/api/posts/:id", async (req, res) => {
   }
 });
 
-// Add a comment to a post
+// Add a comment to a post (public)
 app.post("/api/posts/:id/comments", async (req, res) => {
   try {
     const { content, authorName } = req.body;

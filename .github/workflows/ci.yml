@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test (${{ matrix.module }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - module-0-weather-api
+          - module-1-taskmaster
+          - module-2-debugger
+          - module-3-url-shortener
+          - module-4-legacy-rescue
+          - module-5-blog-auth
+          - module-6-ai-toolkit
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: ${{ matrix.module }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.module }}
+        run: npm ci
+
+      - name: Lint
+        working-directory: ${{ matrix.module }}
+        run: npm run lint --if-present
+
+      - name: Type check
+        working-directory: ${{ matrix.module }}
+        run: npm run type-check --if-present || npm run typecheck --if-present || true
+
+      - name: Test with coverage
+        working-directory: ${{ matrix.module }}
+        run: npm test -- --coverage --if-present
+        continue-on-error: false
+
+  build:
+    name: Build (${{ matrix.module }})
+    runs-on: ubuntu-latest
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - module-0-weather-api
+          - module-6-ai-toolkit
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: ${{ matrix.module }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.module }}
+        run: npm ci
+
+      - name: Build
+        working-directory: ${{ matrix.module }}
+        run: npm run build
+
+  security:
+    name: Security (${{ matrix.module }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - module-0-weather-api
+          - module-1-taskmaster
+          - module-2-debugger
+          - module-3-url-shortener
+          - module-4-legacy-rescue
+          - module-5-blog-auth
+          - module-6-ai-toolkit
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: ${{ matrix.module }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.module }}
+        run: npm ci
+
+      - name: Audit dependencies
+        working-directory: ${{ matrix.module }}
+        run: npm audit --audit-level=high

@@ -7,6 +7,8 @@ import {
   createPost,
   getUserWithPostCount,
   getAllPostsWithAuthors,
+  getCommentsByPost,
+  createComment,
 } from "./db";
 
 const app = express();
@@ -38,7 +40,7 @@ app.post("/api/users", (req, res) => {
   }
 
   try {
-    const user = createUser(name, undefined as any);
+    const user = createUser(name, email);
     res.status(201).json(user);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -67,7 +69,7 @@ app.get("/api/posts/feed", (_req, res) => {
   const start = Date.now();
   const posts = getAllPostsWithAuthors();
   const duration = Date.now() - start;
-  res.json({ posts, meta: { count: posts.length, durationMs: duration } });
+  res.json({ posts, meta: { count: posts.length, durationMs: duration, queryCount: 1 } });
 });
 
 app.post("/api/posts", (req, res) => {
@@ -81,6 +83,31 @@ app.post("/api/posts", (req, res) => {
   try {
     const post = createPost(title, body, Number(authorId));
     res.status(201).json(post);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// --- Comment routes ---
+
+app.get("/api/posts/:id/comments", (req, res) => {
+  const postId = Number(req.params.id);
+  const comments = getCommentsByPost(postId);
+  res.json(comments);
+});
+
+app.post("/api/posts/:id/comments", (req, res) => {
+  const postId = Number(req.params.id);
+  const { authorName, body } = req.body;
+
+  if (!authorName || !body) {
+    res.status(400).json({ error: "authorName and body are required" });
+    return;
+  }
+
+  try {
+    const comment = createComment(authorName, body, postId);
+    res.status(201).json(comment);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

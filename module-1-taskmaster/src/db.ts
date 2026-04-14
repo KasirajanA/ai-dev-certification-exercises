@@ -3,10 +3,13 @@ import path from "path";
 
 const DB_PATH = path.join(process.cwd(), "tasks.db");
 
+export type Priority = "LOW" | "MEDIUM" | "HIGH";
+
 export interface Task {
   id: number;
   title: string;
   status: "todo" | "done";
+  priority: Priority;
   createdAt: string;
 }
 
@@ -24,26 +27,32 @@ export function getDb(): Database.Database {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
+    try {
+      db.exec("ALTER TABLE tasks ADD COLUMN priority TEXT NOT NULL DEFAULT 'MEDIUM'");
+    } catch {
+      // column already exists
+    }
   }
   return db;
 }
 
 export function getAllTasks(): Task[] {
   const rows = getDb()
-    .prepare("SELECT id, title, status, created_at as createdAt FROM tasks ORDER BY id")
+    .prepare("SELECT id, title, status, priority, created_at as createdAt FROM tasks ORDER BY id")
     .all();
   return rows as Task[];
 }
 
-export function addTask(title: string): Task {
+export function addTask(title: string, priority: Priority = "MEDIUM"): Task {
   const stmt = getDb().prepare(
-    "INSERT INTO tasks (title) VALUES (?)"
+    "INSERT INTO tasks (title, priority) VALUES (?, ?)"
   );
-  const result = stmt.run(title);
+  const result = stmt.run(title, priority);
   return {
     id: result.lastInsertRowid as number,
     title,
     status: "todo",
+    priority,
     createdAt: new Date().toISOString(),
   };
 }
